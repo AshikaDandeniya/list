@@ -1,0 +1,127 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+#define MAXLIST 15
+#define EMPTY 0
+#define FULL MAXLIST
+
+typedef int Position;
+
+typedef float ListData;
+
+typedef enum{FALSE,TRUE}Boolean;
+
+
+typedef struct
+{
+    int count;
+    ListData entry[MAXLIST];
+
+}List;
+
+void CreateList(List *l)
+{
+    l->count = 0;
+}
+
+Boolean IsListEmpty(const List *l)
+{
+    return(l->count == EMPTY );
+}
+
+Boolean IsListFull(const List *l)
+{
+    return(l->count == MAXLIST);
+}
+
+int ListSize(const List *l)
+{
+    return l->count;
+}
+
+void InsertLast(ListData x, List *l)
+{
+    if(IsListFull(l))
+    {
+        printf("List is Full");
+    }
+    else
+    {
+        l->entry[l->count++] = x;
+    }
+}
+
+void BubbleSort(List *l)
+{
+    for(int i=0; i < l->count-1;i++)
+    {
+        for(int j=0;j < l->count-i-1;j++)
+        {
+            if(l->entry[j] > l->entry[j+1])
+            {
+                float temp = l->entry[j];
+                l->entry[j] = l->entry[j+1];
+                l->entry[j+1] = temp;
+            }
+        }
+    }
+}
+
+void DisplayList(const List *l)
+{
+    for(int i=0; i< l->count; i++)
+    {
+        printf("%.2f ",l->entry[i]);
+    }
+    printf("\n");
+}
+
+float ComputeMean(const List *l, int n)
+{
+    float sum = 0;
+    for(int i =0; i < n; i++ )
+    {
+        sum += l->entry[i];
+    }
+    return(sum / n);
+}
+
+float ComputeVariance(const List *l,int n,float mean)
+{
+    float sum_of_squares = 0;
+
+    for(int i =0; i<n; i++)
+    {
+        float diff = l->entry[i]-mean;
+        sum_of_squares += diff*diff;
+    }
+    return(sum_of_squares/n);
+}
+
+void main()
+{
+    List L;
+    CreateList(&L);
+
+    printf("Enter 10 real numbers:\n");
+    for(int i =0; i<10; i++)
+    {
+
+        float num;
+        printf("Number %d :",i+1);
+        scanf("%f",&num);
+        InsertLast(num,&L);
+    }
+
+    BubbleSort(&L);
+
+    printf("\nSorted List:\n");
+    DisplayList(&L);
+
+    float mean = ComputeMean(&L,4);
+    printf("\nMean of the first 4 numbers: %.2f\n",mean);
+
+    float variance = ComputeVariance(&L,4,mean);
+    printf("Variance pf 1st 4 numbers: %.2f\n",variance);
+}
+

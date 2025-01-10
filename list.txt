@@ -1,0 +1,175 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXQUEUE 10
+#define TRUE 1
+#define FALSE 0
+
+typedef float QueueElement;
+typedef float ListElement;
+
+typedef struct{
+    QueueElement entry[MAXQUEUE];
+    int front;
+    int rear;
+    int count;
+}Queue;
+
+void CreateQueue(Queue *q)
+{
+    q->count=0;
+    q->front=0;
+    q->rear=-1;
+}
+
+int IsQueueEmpty(Queue *q)
+{
+    if(q->rear < q->front){
+        return(TRUE);
+    }else{
+        return(FALSE);
+    }
+}
+
+int IsQueueFull(Queue *q)
+{
+    if(q->rear == MAXQUEUE-1){
+        return(TRUE);
+    }else{
+        return(FALSE);
+    }
+}
+
+void Append(QueueElement x, Queue *q)
+{
+    if(!IsQueueFull(q)){
+        q->entry[++(q->rear)] = x;
+        q->count++;
+    }else{
+        printf("Queue is full. Cannot insert more\n");
+        exit(1);
+    }
+}
+
+void Retrieve(QueueElement *x, Queue *q)
+{
+    if(!IsQueueEmpty(q)){
+        *x = q->entry[(q->front)++];
+        q->count--;
+    }else{
+        printf("Queue is Empty\n");
+        exit(1);
+    }
+}
+
+typedef struct
+{
+    ListElement entry[MAXQUEUE];
+    int count;
+}List;
+
+void CreateList(List *l)
+{
+    l->count = 0;
+}
+
+int IsListEmpty(List *l)
+{
+    if(l->count == 0){
+        return(TRUE);
+    }else{
+        return(FALSE);
+    }
+}
+
+int IsListFull(List *l)
+{
+    if(l->count == MAXQUEUE-1){
+        return(TRUE);
+    }else{
+        return(FALSE);
+    }
+}
+
+int ListCount(List *l)
+{
+    return l->count;
+}
+
+void InsertLast(ListElement x, List *l)
+{
+    if(!IsListFull(l)){
+        l->entry[l->count++] = x;
+    }
+}
+
+void RetrieveList(int p,ListElement *x,List *l)
+{
+    if(IsListEmpty(l)){
+        printf("List is empty");
+        exit(1);
+    }else if(p<0 && p>=ListCount(&l)){
+        printf("Entered a wrong position");
+        exit(1);
+    }else{
+        *x = l->entry[p];
+    }
+}
+
+void BubbleSort(List *l)
+{
+    for(int i=0; i<l->count-1; ++i){
+        for(int j=0; j<l->count-i-1; ++j){
+            if(l->entry[j]>l->entry[j+1]){
+                ListElement temp = l->entry[j];
+                l->entry[j] = l->entry[j+1];
+                l->entry[j+1] = temp;
+            }
+        }
+    }
+}
+
+void Mean(List *l)
+{
+    ListElement sum =0;
+    for(int i=0; i<4; ++i)
+    {
+        sum += l->entry[i];
+    }
+    ListElement mean = sum/4;
+    printf("Mean of the first 4 numbers is: %.2f", mean);
+}
+
+int main()
+{
+    Queue Q;
+    List l;
+    QueueElement x;
+    ListElement y;
+
+    CreateQueue(&Q);
+    CreateList(&l);
+
+    Append(3.8,&Q);
+    Append(5.3,&Q);
+    Append(0.8,&Q);
+    Append(100.4,&Q);
+    Append(51.9,&Q);
+    Append(43.5,&Q);
+    Append(1000.4,&Q);
+    Append(8.9,&Q);
+
+    for(int i=0; i<MAXQUEUE && !IsQueueEmpty(&Q); ++i){
+        Retrieve(&x, &Q);
+        InsertLast(x, &l);
+    }
+
+    BubbleSort(&l);
+
+    for(int i=0; i<l.count && !IsListEmpty(&l) ; ++i){
+        RetrieveList(i,&y,&l);
+        printf("%.2f\n", y);
+    }
+
+    Mean(&l);
+}
