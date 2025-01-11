@@ -1,0 +1,220 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXLIST 20
+#define TRUE 1
+#define FALSE 0
+
+
+typedef int Position;
+
+typedef float ListData;
+
+
+typedef struct
+{
+    int count;
+    ListData entry[MAXLIST];
+
+}List;
+
+void CreateList(List *l)
+{
+    return(l->count =0);
+}
+
+int isListEmpty(const List*l)
+{
+    if(l->count == 0)
+    {
+        return(TRUE);
+    }
+    else
+    {
+        return(FALSE);
+    }
+}
+
+int isListFull(const List*l)
+{
+    if(l->count == MAXLIST-1)
+    {
+        return(TRUE);
+    }
+    else
+    {
+        return(FALSE);
+    }
+}
+
+void InsertLast(ListData x,List *l)
+{
+    if(isListFull(l))
+    {
+        printf("List is Full");
+        exit(1);
+    }
+    else
+    {
+        l->entry[l->count++] = x;
+    }
+}
+
+void RetieveList(Position p,ListData *x,const List *l)
+{
+    if(isListEmpty(l))
+    {
+        printf("List is empty");
+        exit(1);
+    }
+    else
+    {
+        *x = l->entry[p] ;
+    }
+}
+
+void BubbleSort(List *l)
+{
+    for(int i=0; i < l->count-1; i++)
+    {
+        for(int j=0; j < l->count-1; j++)
+        {
+            if(l->entry[j]> l->entry[j+1])
+            {
+                float temp = l->entry[j];
+                l->entry[j] = l->entry[j+1];
+                l->entry[j+1] = temp;
+            }
+        }
+    }
+}
+
+/*void DisplayList(List *l)
+{
+    for(int i=0; i < l->count; i++ )
+    {
+        printf("%.2f  ",l->entry[i]);
+    }
+    printf("\n");
+}*/
+
+typedef float QueueElement;
+
+typedef struct queue
+{
+    int front;
+    int rear;
+    int count;
+    QueueElement entry[MAXLIST];
+}Queue;
+
+void CreateQueue(Queue *q)
+{
+    q->count = 0;
+    q->front = 0;
+    q->rear = -1;
+}
+
+int IsQueueEmpty(const Queue *q)
+{
+  if(q->rear < q->front)
+  {
+      return(TRUE);
+  }
+  else
+  {
+      return(FALSE);
+  }
+}
+
+int IsQueueFull(const Queue *q)
+{
+  if(q->rear == MAXLIST-1)
+  {
+      return(TRUE);
+  }
+  else
+  {
+      return(FALSE);
+  }
+}
+
+void Append(QueueElement x, Queue *q)
+{
+    if(IsQueueFull(q))
+    {
+        printf("Queue is Full");
+        exit(1);
+    }
+    else
+    {
+        q->entry[++(q->rear)] = x;
+        q->count++;
+    }
+}
+
+void Serve(QueueElement *x, Queue *q)
+{
+    if(IsQueueEmpty(q))
+    {
+        printf("Queue is Empty");
+        exit(1);
+    }
+    else
+    {
+        *x = q->entry[(q->front)++];
+        q->count--;
+    }
+}
+
+
+void main()
+{
+    Queue q;
+    QueueElement y;
+
+    List L;
+    ListData x;
+
+    CreateQueue(&q);
+    CreateList(&L);
+
+     Append(3.8,&q);
+     Append(0.8,&q);
+     Append(5.3,&q);
+     Append(100.4,&q);
+     Append(51.9,&q);
+     Append(43.5,&q);
+     Append(1000.4,&q);
+     Append(8.9,&q);
+
+
+     for(int i=0; i < MAXLIST && !IsQueueEmpty(&q); i++)
+     {
+         Serve(&y,&q);
+         InsertLast(y,&L);
+     }
+
+    /*printf("Enter 10 values\n");
+
+    for(int i=0; i <10 ;i++)
+    {
+        float num;
+        printf("Number %d :",i+1);
+        scanf("%f",&num);
+        InsertLast(num,&L);
+    }*/
+
+    BubbleSort(&L);
+
+    printf("\nSorted List\n");
+
+    //DisplayList(&L);
+
+    for(int i=0;i<L.count;i++)
+    {
+        RetieveList(i,&x,&L);
+        printf("%.2f ",x);
+    }
+}
+
